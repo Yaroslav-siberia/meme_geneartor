@@ -1,5 +1,5 @@
 requests==2.22.0
 transformers==4.10.1
 flask==1.1.2
-keras
-tensorflow
+tensorflow==2.7 
+pillow==9.0

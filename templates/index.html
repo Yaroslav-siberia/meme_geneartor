@@ -12,13 +12,43 @@
 <div class="container col-xxl-8 px-4 py-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <div class="col-10 col-sm-8 col-lg-6">
-            <img alt="Generated result image" title="Generated result image" src="/static/images/placeholder-image.png" id="result-image"/>
+            <img alt="Generated result image" style="width: 500px;max-height: 800px;" title="Generated result image" src="{{ user_image }}" id="result-image"/>
         </div>
-        <div class="col-lg-6">
+        
+        <div class="col-lg-6" >
             <h1 class="display-5 fw-bold lh-1 mb-3">Template for meme generation</h1>
-            <p class="lead">Brand new meme in one click.</p>
+            <p class="lead">Let's generate new meme together.</p>
+            
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <button type="button" onclick="generate_random_meme()" class="btn btn-primary btn-lg px-4 me-md-2">Generate MEME</button>
+                <button type="button" onclick="generate_random_meme()" class="btn btn-primary btn-lg px-4 me-md-2">Generate random MEME</button>
+                <br>
+                
+            </div>
+            <br>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <p class="lead">Brand new feature to unite Your and ML power to generate MEME caption.</p>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <input style="min-width: 16em;" placeholder="Add some text for generation" id="user_input">
+            </div>
+            <br>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <select id="meme_dict">
+                    <option value="56225174">Be-Like-Bill</option>
+                    <option value="102156234">Mocking-Spongebob</option>
+                    <option value="8072285">Doge</option>
+                    <option value="99683372">Sleeping-Shaq</option>
+                    <option value="259237855">Laughing-Leo</option>
+                    <option value="195515965">Clown-Applying-Makeup</option>
+                    <option value="922147">Laughing-Men-In-Suits</option>
+                    <option value="155067746">Surprised-Pikachu</option>
+                    <option value="114585149">Inhaling-Seagull</option>
+                    <option value="61539">First-World-Problems</option>
+                  </select>
+                <button type="button" onclick="generate_meme_by_id(document.getElementById('meme_dict').value, document.getElementById('user_input').value)" class="btn btn-primary btn-lg px-4 me-md-2">Generate MEME</button>
+            </div>
+            <br>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <button type="button" id="downloadBtn" onclick="download_image()" disabled class="btn btn-success btn-lg px-4 me-md-2">Download MEME</button>
             </div>
         </div>

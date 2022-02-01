@@ -1,5 +1,4 @@
   const GeneratorEndpoint = "generate"
-
   const loadingSrc = "../static/images/loader.gif"
   const resultImage = document.getElementById("result-image")
   const downloadBtn = document.getElementById("downloadBtn")
@@ -11,14 +10,38 @@
                           "102156234","181913649","135256802","16464531","184801100","3218037","170715647","163573","61581","74191766",
                           "124822590","438680","1035805","89370399","40945639","61733537","164335977","10364354","326093",
                           "4087833","135678846","61520","217743513","134797956","222403160","148909805","226297822"]
+
+const template_dict = {
+   "102156234":"Mocking-Spongebob",
+   "8072285": "Doge",
+   "99683372": "Sleeping-Shaq",
+   "259237855":"Laughing-Leo",
+   "195515965":"Clown-Applying-Makeup",
+   "922147":"Laughing-Men-In-Suits",
+   "155067746":"Surprised-Pikachu",
+   "114585149": "Inhaling-Seagull",
+   "61539": "First-World-Problems"
+  }                          
+  
   function generate_random_meme(){
       const random = Math.floor(Math.random() * template_ids.length);
       resultImage.src = loadingSrc
       fetch(`${GeneratorEndpoint}/${template_ids[random]}`)
           .then(res => res.json())
-          .then(data => resultImage.src = data.result_image)
+          .then(data => resultImage.src = data.user_image)
       downloadBtn.disabled = false;
   }
+  function generate_meme_by_id(id, user_input){
+      
+      
+      resultImage.src = loadingSrc
+      fetch(`${GeneratorEndpoint}/${id}?text=${user_input}`)
+          .then(res => res.json())
+          .then(data => resultImage.src = data.user_image)
+      console.log(resultImage.src);
+      downloadBtn.disabled = false;
+  }
+  
   async function download_image(){
       var downloadImage = document.getElementById("result-image");
       const image = await fetch(downloadImage.src)
