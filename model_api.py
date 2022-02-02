@@ -93,12 +93,6 @@ def get_model():
     return TFGPT2LMHeadModel.from_pretrained("model/trained/")
 
 
-def get_api_credentials():
-    with open("credentials.json") as f:
-        credentials = json.load(f)
-    return credentials
-
-
 def get_logger(logger_name: str = "ModelAPILogger") -> logging.Logger:
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
                         level=logging.INFO)
@@ -208,8 +202,6 @@ def generate_meme(category_id: str,
                 f"CAPTION: '{' '.join(caption)}'")
 
     try:
-        #print("Category Name", category.name.replace(' ', '-'))
-        #print('Caption', caption)
 
         return draw_text(category.name.replace(' ', '-'), caption)
     except Exception as e:
@@ -217,11 +209,10 @@ def generate_meme(category_id: str,
 
 
 def get_model_api():
-    #api_credentials = get_api_credentials()
+
     tokenizer = get_tokenizer()
     model = get_model()
     logger = get_logger()
-    # api_credentials,
 
     def model_api_lambda(category_id, user_input):
         return generate_meme(category_id, user_input, tokenizer, model,

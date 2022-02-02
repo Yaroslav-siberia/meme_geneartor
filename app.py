@@ -3,12 +3,14 @@ from model_api import get_model_api
 
 
 app = Flask(__name__)
+app.config.from_object("config.ProductionConfig")
+print(app.config)
 model_api = get_model_api()
 
-STATIC_PLACEHOLDER_IMG = "/static/images/placeholder-image.png"
-HOST = "0.0.0.0"
-PORT = 3000
-DEBUG = False
+STATIC_PLACEHOLDER_IMG = app.config['STATIC_PLACEHOLDER_IMG']
+HOST = app.config["HOST"]
+PORT = app.config["PORT"]
+DEBUG = app.config["DEBUG"]
 
 
 @app.route('/')
