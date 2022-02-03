@@ -1,2 +1,6 @@
-# meme_geneartor
-generating memes
+# NLP Language Model generating MEMEs
+## Stack: 
+* Python
+* Flask
+* Tensorflow 
+* DistilGPT-2 LM
