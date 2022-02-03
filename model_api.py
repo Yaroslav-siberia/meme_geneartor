@@ -17,7 +17,7 @@ tf.random.set_seed(SEED)
 END_OF_BOX_TOKEN = "<|endofbox|>"
 END_OF_TEXT_TOKEN = "<|endoftext|>"
 FAILED_URL = "https://cdn.oncheckin.com/blogassets/blog-d888cc31-b202-4676-bdbe-e01432534be7.png"
-MAX_BOX_LENGTH = 90
+MAX_BOX_LENGTH = 800
 
 
 @dataclass
@@ -157,7 +157,7 @@ def generate_caption(category: MemeCategory,
         max_length=MAX_LEN,
         top_p=0.96,
         top_k=12,
-        temperature=9,
+        temperature=5,
         pad_token_id=50256
     )
     variants = model_output
@@ -202,7 +202,7 @@ def generate_meme(category_id: str,
                 f"CAPTION: '{' '.join(caption)}'")
 
     try:
-
+        # print(f"caption {caption}")
         return draw_text(category.name.replace(' ', '-'), caption)
     except Exception as e:
         logger.error('Generate_meme', e)

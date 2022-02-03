@@ -1,3 +1,4 @@
+import math
 from asyncio.log import logger
 from cmath import log
 from PIL import Image, ImageFont, ImageDraw
@@ -6,6 +7,7 @@ import calendar
 import json
 import os
 import glob
+import re
 
 STATIC_IMG_FOLDER = './static/images/'
 
@@ -131,9 +133,55 @@ def clean_old_memes(dir: str, class_: str):
         except Exception as e:
             print('[clean_old_memes]:', e)
 
+def change_text_count(text: list, box_count: int):
+    # соединили боксы установив точки между боксами.
+    # соединили боксы установив точки между боксами.
+    string = ".".join(text)
+    string = re.sub('([!?.])', r'\1|', string)
+    count = len(re.findall(r'[!?.]', string))
+    new_text = re.split('\|', string)
+    if count == box_count:
+        return new_text
+    elif count > box_count:
+        while len(new_text) > box_count:
+            u_index=0
+            u_len = math.inf
+            # находим 2 соседних элемента которые суммарно имеют наименьшую длину
+            for i in range(0,len(new_text)-1):
+                if len(new_text[i]+new_text[i+1]) < u_len:
+                    u_len = len(new_text[i]+new_text[i+1])
+                    u_index = i
+            #  объединяем
+            union = new_text[u_index]+new_text[u_index+1]
+            u_new_text = new_text[0:u_index]+[union]+new_text[u_index+2:]
+            new_text = u_new_text
+        return new_text
+    elif count < box_count:
+        while len(new_text) < box_count:
+            u_index = 0
+            u_len = 0
+            for i in range(len(new_text)):
+                if len(new_text[i])>u_len:
+                    u_len = len(new_text[i])
+                    u_index = i
+            share = new_text[u_index].split(' ')
+            k=0
+            for i in range(len(share)):
+                k=i
+                sum1=sum([len(x) for x in share[:i]])
+                sum2=sum([len(x) for x in share[i:]])
+                if sum1>sum2:
+                    break
+            part1 = " ".join(share[:k])
+            part2 = " ".join(share[k:])
+            u_new_text = new_text[0:u_index] + [part1] + [part2] + new_text[u_index+1:]
+            new_text = u_new_text
+        return new_text
+
+
 
 def draw_text(class_: str, text: str):
-
+    print(f"text  {text}")
     # чистые картинки лежат в папке templates
     # проверка на наличие такого класса в рисовалке
 
@@ -152,37 +200,32 @@ def draw_text(class_: str, text: str):
             #text = text.split('|')
 
             # случай когда у нас текста меньше чем коробок для написания текста
-            while len(template_config['areas']) > len(text):
-                text.append(" ")
+            # ПЕРЕДЕЛАЙ ТЕКСТ)
+            if len(template_config['areas']) != len(text):
+                text = change_text_count(text,len(template_config['areas']))
+            #while len(template_config['areas']) > len(text):
+            #    text.append(" ")
             #text = text if len(template_config['areas']) == len(text) else text.append("")
             # проверяем что количество боксов совпадает с количеством окошек для написания
-            if len(template_config['areas']) == len(text):
-                # начинаем рисовать
-                image = drawTextInBox(image, text, template_config)
-                # создадим текущую метку utc для создания уникальной картинки
-                crnt_dt = str(calendar.timegm(
-                    datetime.datetime.utcnow().utctimetuple()))
-                # создаем путь до нового мема
-                path_img = f"{STATIC_IMG_FOLDER}{class_}_{crnt_dt}.jpg"
-                # прежде чем сохранять, имеет смысл почистить другие мемы
-                clean_old_memes(STATIC_IMG_FOLDER, class_)
+            #if len(template_config['areas']) == len(text):
+            # начинаем рисовать
+            image = drawTextInBox(image, text, template_config)
+            # создадим текущую метку utc для создания уникальной картинки
+            crnt_dt = str(calendar.timegm(
+                datetime.datetime.utcnow().utctimetuple()))
+            # создаем путь до нового мема
+            path_img = f"{STATIC_IMG_FOLDER}{class_}_{crnt_dt}.jpg"
+            # прежде чем сохранять, имеет смысл почистить другие мемы
+            clean_old_memes(STATIC_IMG_FOLDER, class_)
 
-                # это потом можно удалить или закомментировать
-                image.save(path_img)
-                # вот тут тебе вернется картинка и флаг получилось или нет
-                # type(img) = PIL.JpegImagePlugin.JpegImageFile
-                return True, path_img
-            else:
+            # это потом можно удалить или закомментировать
+            image.save(path_img)
+            # вот тут тебе вернется картинка и флаг получилось или нет
+            # type(img) = PIL.JpegImagePlugin.JpegImageFile
+            return True, path_img
+            '''else:
                 # количество окошек не совпадает с количеством текстовых единиц мема
                 print("textbox's count and texts count are not equal")
-                return False, image
+                return False, image'''
         else:
             print(f"something goes wrong in getting {class_} config")
-
-#draw_text("Inhaling_Seagull","PIL imaging | it mighst nsot  | opsen fisles  witshout | modulse wisll forgive four five")
-
-
-'''draw_text("Inhaling_Seagull","PIL imaging library is pretty smart. Althougsh | it mighst nsot be ideal in all cases you can"
-                                 " | opsen fisles  witshout esven styping their full names or file extensions.PIL library’s Image "
-                                 "| modulse wisll forgive such sssssssssmistakes whisle opening files and figure out the file extension. "
-                                 " One two three four five")'''
