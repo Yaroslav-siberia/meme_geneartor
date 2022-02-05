@@ -58,6 +58,7 @@ def drawTextInBox(img, text, template_config):
         make_less_fontsize = True
         while exit == False:
             string = string.upper()
+            string += ' '
             if make_less_fontsize == False:
                 fontsize += 2
             font = ImageFont.truetype(poppin, fontsize, encoding="unic")
